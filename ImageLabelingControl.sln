@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageLabelingControl", "ImageLabelingControl\ImageLabelingControl.csproj", "{3245BDCB-E8FA-4CE1-9C3E-524F67A36B4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3245BDCB-E8FA-4CE1-9C3E-524F67A36B4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3245BDCB-E8FA-4CE1-9C3E-524F67A36B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3245BDCB-E8FA-4CE1-9C3E-524F67A36B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3245BDCB-E8FA-4CE1-9C3E-524F67A36B4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2672014B-9042-45A6-95FA-328B2A5637D1}
+	EndGlobalSection
+EndGlobal
