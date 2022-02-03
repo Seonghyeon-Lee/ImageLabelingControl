@@ -31,6 +31,8 @@ namespace ImageLabelingControl
             PART_AutoFitBtn.Click += PART_AutoFitBtn_Click;
             Eraser.Click += Eraser_Click;
 
+            //PART_InkCanvas.EditingMode = InkCanvasEditingMode.None;
+            //PART_InkCanvas.Cursor = Cursors.Arrow;
             PART_InkCanvas.DefaultDrawingAttributes.Height = PART_InkCanvas.DefaultDrawingAttributes.Width = 1;
         }
 

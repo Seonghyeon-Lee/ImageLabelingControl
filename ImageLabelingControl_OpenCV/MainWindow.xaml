@@ -6,7 +6,47 @@
         xmlns:local="clr-namespace:ImageLabelingControl_OpenCV"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="BrushBtn" Width="100"/>
+                <Button x:Name="EraserBtn" Width="100"/>
+                <Button x:Name="LineBtn" Width="100"/>
+                <Slider x:Name="PenSlider" Width="100"
+                        Value="10" Minimum="0" Maximum="100"/>
+            </StackPanel>
+        </Grid>
         
+        <ScrollViewer Name="PART_ScrollViewer" 
+                      Grid.Row="1"
+                      VerticalScrollBarVisibility="Visible" 
+                      HorizontalScrollBarVisibility="Visible"
+                      AllowDrop="True">
+            <Viewbox x:Name="PART_Viewbox" RenderTransformOrigin="0.5,0.5"
+                     Width="{Binding Path=ActualWidth, ElementName=PART_ScrollViewer}"
+                     Height="{Binding Path=ActualHeight, ElementName=PART_ScrollViewer}"
+                     RenderOptions.BitmapScalingMode="NearestNeighbor"
+                     RenderOptions.EdgeMode="Aliased"
+                     SnapsToDevicePixels="True">
+
+                <Viewbox.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="scaleTransform"/>
+                    </TransformGroup>
+                </Viewbox.LayoutTransform>
+
+                <Grid x:Name="PART_Grid" Background="Transparent">
+                    <Image x:Name="PART_Image2"/>
+                    <Image x:Name="PART_Image3"/>
+                    <Image x:Name="PART_Image"/>
+                </Grid>
+            </Viewbox>
+        </ScrollViewer>
     </Grid>
 </Window>
