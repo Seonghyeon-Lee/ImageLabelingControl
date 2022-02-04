@@ -22,19 +22,101 @@
                         Value="10" Minimum="0" Maximum="100"/>
             </StackPanel>
         </Grid>
-        
-        <ScrollViewer Name="PART_ScrollViewer" 
-                      Grid.Row="1"
+
+        <ScrollViewer Grid.Row="1"
+                      Name="PART_ScrollViewer" 
                       VerticalScrollBarVisibility="Visible" 
                       HorizontalScrollBarVisibility="Visible"
                       AllowDrop="True">
-            <Viewbox x:Name="PART_Viewbox" RenderTransformOrigin="0.5,0.5"
-                     Width="{Binding Path=ActualWidth, ElementName=PART_ScrollViewer}"
-                     Height="{Binding Path=ActualHeight, ElementName=PART_ScrollViewer}"
-                     RenderOptions.BitmapScalingMode="NearestNeighbor"
-                     RenderOptions.EdgeMode="Aliased"
-                     SnapsToDevicePixels="True">
 
+            <ScrollViewer.Template>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid x:Name="ScrollViewerGrid" 
+                          Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" 
+                                                Grid.Column="0" Grid.Row="0"
+                                                CanHorizontallyScroll="False" 
+                                                CanVerticallyScroll="False" 
+                                                Margin="{TemplateBinding Padding}"
+                                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                                ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                                Content="{TemplateBinding Content}"/>
+
+                        <ScrollBar x:Name="PART_VerticalScrollBar" 
+                                   Grid.Column="1" Grid.Row="0" 
+                                   Cursor="Arrow"  Opacity="0.4"
+                                   Background="Transparent" BorderThickness="0"
+                                   AutomationProperties.AutomationId="VerticalScrollBar" 
+                                   Minimum="0" Maximum="{TemplateBinding ScrollableHeight}" 
+                                   ViewportSize="{TemplateBinding ViewportHeight}"
+                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" 
+                                   Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                        <Grid Grid.Column="0" Grid.Row="1" 
+                              Margin="0 0 -15 0"
+                              Background="White">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid x:Name="PART_StatusGrid">
+                                <StackPanel Orientation="Horizontal">
+                                    <ComboBox Name="PART_ScaleComboBox"
+                                              MinHeight="10" Height="25" Width="80">
+                                        <ComboBoxItem Content="10"/>
+                                        <ComboBoxItem Content="50"/>
+                                        <ComboBoxItem Content="100"/>
+                                        <ComboBoxItem Content="150"/>
+                                        <ComboBoxItem Content="200"/>
+                                    </ComboBox>
+
+                                    <TextBlock x:Name="PART_CursorCoordinateTextBox"/>
+                                    <TextBlock x:Name="PART_ColorSpaceTextBox"/>
+                                    <TextBlock x:Name="PART_ImageFormatTextBox"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <ScrollBar x:Name="PART_HorizontalScrollBar" 
+                                       Grid.Column="1" Opacity="0.4"
+                                       Cursor="Arrow" Orientation="Horizontal"
+                                       Background="Transparent" BorderThickness="0"
+                                       AutomationProperties.AutomationId="HorizontalScrollBar" 
+                                       Minimum="0" Maximum="{TemplateBinding ScrollableWidth}"
+                                       ViewportSize="{TemplateBinding ViewportWidth}"
+                                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" 
+                                       Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                            <Grid Grid.Column="2">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="("/>
+                                    <TextBlock x:Name="PART_ImageWidthTextBlock"/>
+                                    <TextBlock Text=","/>
+                                    <TextBlock x:Name="PART_ImageHeightTextBlock"/>
+                                    <TextBlock Text=")"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </ScrollViewer.Template>
+
+            <Viewbox x:Name="PART_Viewbox" 
+                     SnapsToDevicePixels="True"
+                     RenderTransformOrigin="0.5,0.5"       
+                     RenderOptions.EdgeMode="Aliased"
+                     RenderOptions.BitmapScalingMode="NearestNeighbor"
+                     Width="{Binding Path=ActualWidth, ElementName=PART_ScrollViewer}"
+                     Height="{Binding Path=ActualHeight, ElementName=PART_ScrollViewer}">
                 <Viewbox.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform x:Name="scaleTransform"/>
@@ -42,9 +124,23 @@
                 </Viewbox.LayoutTransform>
 
                 <Grid x:Name="PART_Grid" Background="Transparent">
-                    <Image x:Name="PART_Image2"/>
-                    <Image x:Name="PART_Image3"/>
-                    <Image x:Name="PART_Image"/>
+                    <!--<Image x:Name="PART_Image2"/>-->
+                    <InkCanvas x:Name="PART_InkCanvas"
+                               EditingMode="None">
+                        <InkCanvas.Background>
+                            <VisualBrush>
+                                <VisualBrush.Visual>
+                                    <Image x:Name="PART_BackgroundImage"
+                                           Stretch="Fill"
+                                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                                           SnapsToDevicePixels="True"
+                                           RenderOptions.EdgeMode="Aliased"/>
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </InkCanvas.Background>
+                    </InkCanvas>
+                    <Image x:Name="PART_LabelImage"/>
+                    <Image x:Name="PART_TemplabelImage"/>
                 </Grid>
             </Viewbox>
         </ScrollViewer>
