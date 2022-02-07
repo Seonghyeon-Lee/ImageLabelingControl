@@ -104,7 +104,6 @@ namespace ImageLabelingControl_OpenCV.Draw
                 Cv2.Line(labelImage, (int)_StartPoint.Value.X, (int)_StartPoint.Value.Y, (int)_LastPoint.Value.X, (int)_LastPoint.Value.Y, _Color, _WidthScale, LineTypes.Link8);
             }
             
-
             writeableBitmapSource.WritePixels(roiRect, labelImage.Data, _ImageSize, _ImageStride, roiRect.X, roiRect.Y);
             image.Source = writeableBitmapSource;
             _LastPoint = null;

@@ -127,14 +127,8 @@ namespace ImageLabelingControl
             var dropItems = (string[])e.Data.GetData(DataFormats.FileDrop);
             _Image = new ImageInfo(dropItems[0]);
             PART_Image.Source = new BitmapImage(new Uri(_Image.FilePath));
-            //PART_Image.Height = _Image.Width;
-            //PART_Image.Height = _Image.Height;
             PART_InkCanvas.Width = _Image.Width;
             PART_InkCanvas.Height = _Image.Height;
-
-            //PART_CanvasGrid.Width = _Image.Width;
-            //PART_CanvasGrid.Height = _Image.Height;
-
 
             SetCanvasScale();
             UpdateScale();

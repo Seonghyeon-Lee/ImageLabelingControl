@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace ImageLabelingControl_OpenCV
+namespace ControlCore.Model
 {
     public static class CustomCursors
     {

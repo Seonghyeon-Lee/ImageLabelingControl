@@ -1,32 +1,33 @@
-﻿using ControlCore.Model;
-using ImageLabelingControl_OpenCV.Draw;
-using OpenCvSharp;
-using OpenCvSharp.Extensions;
-using OpenCvSharp.WpfExtensions;
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Window = System.Windows.Window;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Threading.Tasks;
+using ControlCore.Model;
 
-namespace ImageLabelingControl_OpenCV
+namespace WriteableBitmapEX_Test
 {
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region Field
+        #region Fields
+
         private int _ImageStride;
         private int _ImageSize;
         private Int32Rect _RoiRect;
-        private Mat _LabelImage;
-        private Mat _TempLabelImage;
+        //private Mat _LabelImage;
+        //private Mat _TempLabelImage;
         private ImageInfo _ImageInfo;
         private System.Windows.Point? _LastCenterPositionOnTarget;
         private System.Windows.Point? _LastMousePositionOnTarget;
@@ -42,17 +43,20 @@ namespace ImageLabelingControl_OpenCV
         private double _CanvasScale;
         private double _CurCursorScale;
 
-        private Scalar _Curcolor;
-        private Scalar _DrawColor = new Scalar(0x45, 0x00, 0xFF, 0x64);
-        private Scalar _EraserColor = new Scalar(0x00, 0x00, 0x00, 0x00);
+        //private Scalar _Curcolor;
+        //private Scalar _DrawColor = new Scalar(0x45, 0x00, 0xFF, 0x64);
+        //private Scalar _EraserColor = new Scalar(0x00, 0x00, 0x00, 0x00);
 
         private DrawType _CurDrawType;
 
         private WriteableBitmap _WriteableBitmapSource;
         private WriteableBitmap _DrawWriteableBitmapSource;
 
-        private DrawLabelBase _DrawLabel;
+        //private DrawLabelBase _DrawLabel;
+
         #endregion
+
+        #region Contructors
 
         public MainWindow()
         {
@@ -75,8 +79,10 @@ namespace ImageLabelingControl_OpenCV
             PenSlider.ValueChanged += PenSlider_ValueChanged;
 
             PART_Viewbox.Cursor = CustomCursors.Brush(_BrushWidth * _CurCursorScale);
-            _Curcolor = _DrawColor;
+            // _Curcolor = _DrawColor;
         }
+
+        #endregion
 
         #region ScrollViewer Method
         private void PART_ScrollViewer_Drop(object sender, DragEventArgs e)
@@ -97,15 +103,45 @@ namespace ImageLabelingControl_OpenCV
 
         private void InitImage()
         {
-            _LabelImage = new Mat(new OpenCvSharp.Size(_ImageInfo.Width, _ImageInfo.Height), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
-            _WriteableBitmapSource = new WriteableBitmap(_ImageInfo.Width, _ImageInfo.Height, 96, 96, PixelFormats.Bgra32, null);
-            _RoiRect = new Int32Rect(0, 0, _ImageInfo.Width, _ImageInfo.Height);
-            _ImageStride = (int)_LabelImage.Step();
-            _ImageSize = (int)_LabelImage.Total() * 4;
-            _WriteableBitmapSource.WritePixels(_RoiRect, _LabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
+            //_LabelImage = new Mat(new OpenCvSharp.Size(_ImageInfo.Width, _ImageInfo.Height), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
 
-            _TempLabelImage = new Mat(new OpenCvSharp.Size(_ImageInfo.Width, _ImageInfo.Height), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
-            _DrawWriteableBitmapSource = _WriteableBitmapSource.Clone();
+            _WriteableBitmapSource = new WriteableBitmap(_ImageInfo.Width, _ImageInfo.Height, 96, 96, PixelFormats.Bgra32, null);
+            byte[,,] pixelArray = new byte[_ImageInfo.Height, _ImageInfo.Width, 4];
+
+            //for (int y = 0; y < _ImageInfo.Height; y++) 
+            //{ 
+            //    for (int x = 0; x < _ImageInfo.Width; x++) 
+            //    { 
+            //        for (int i = 0; i < 3; i++) 
+            //        { 
+            //            pixelArray[y, x, i] = 0; 
+            //        } 
+
+            //        pixelArray[y, x, 3] = 255; 
+            //    } 
+            //}
+
+            byte[] byteArray = new byte[_ImageInfo.Height * _ImageInfo.Width * 4]; 
+            //int index = 0;
+            //for (int row = 0; row < _ImageInfo.Height; row++) 
+            //{ 
+            //    for (int col = 0; col < _ImageInfo.Width; col++) 
+            //    { 
+            //        for (int i = 0; i < 4; i++) 
+            //        {
+            //            byteArray[index++] = pixelArray[row, col, i];
+            //        } 
+            //    } 
+            //}
+
+            _RoiRect = new Int32Rect(0, 0, _ImageInfo.Width, _ImageInfo.Height);
+            _ImageStride = _ImageInfo.Width * 4;
+            // _ImageSize = (int)_LabelImage.Total() * 4;
+
+            _WriteableBitmapSource.WritePixels(_RoiRect, byteArray, _ImageStride, 0);
+            PART_LabelImage.Source = _WriteableBitmapSource;
+            //_TempLabelImage = new Mat(new OpenCvSharp.Size(_ImageInfo.Width, _ImageInfo.Height), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
+            //_DrawWriteableBitmapSource = _WriteableBitmapSource.Clone();
         }
 
         void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -232,20 +268,20 @@ namespace ImageLabelingControl_OpenCV
         {
             _CurDrawType = DrawType.Line;
             PART_Viewbox.Cursor = Cursors.Cross;
-            _DrawLabel = new DrawLine();
+            // _DrawLabel = new DrawLine();
         }
 
         private void BrushBtn_Click(object sender, RoutedEventArgs e)
         {
-            _CurDrawType = DrawType.Brush;
-            _Curcolor = _DrawColor;
+            _CurDrawType = DrawType.Cursor;
+            // _Curcolor = _DrawColor;
             PART_Viewbox.Cursor = CustomCursors.Brush(_BrushWidth * _CurCursorScale);
         }
 
         private void EraserBtn_Click(object sender, RoutedEventArgs e)
         {
             _CurDrawType = DrawType.Eraser;
-            _Curcolor = _EraserColor;
+            // _Curcolor = _EraserColor;
             PART_Viewbox.Cursor = CustomCursors.Eraser(_BrushWidth * _CurCursorScale);
         }
         #endregion
@@ -290,62 +326,26 @@ namespace ImageLabelingControl_OpenCV
         }
         #endregion
 
-
-        private IntPoint _DrawingStartPos = new IntPoint();
-        private IntPoint _DrawingLastPos = new IntPoint();
-
         private void PART_Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_LabelImage == null)
-                return;
-
             var mousePos = e.GetPosition(PART_Grid);
-            if (_CurDrawType == DrawType.Brush ||
-                _CurDrawType == DrawType.Eraser)
+            if (_CurDrawType == DrawType.Line)
             {
-                Cv2.Circle(_LabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, _BrushWidth / 2, _Curcolor, -1, LineTypes.Link4);
-                UpdateWriteableBitmapRoi(mousePos);
-                UpdateLabelLayer();
+                _DrawStartPoint = mousePos;
+                // _DrawLabel.OnMouseDown(PART_Grid, _Curcolor, _ImageSize, _ImageStride, _BrushWidth, e);
             }
-            //_DrawingStartPos.X = (int)mousePos.X;
-            //_DrawingStartPos.Value.Y = (int)mousePos.Y;
-            _DrawingStartPos.Set(mousePos);
-            //var mousePos = e.GetPosition(PART_Grid);
-            //if (_CurDrawType == DrawType.Line)
-            //{
-            //    _DrawStartPoint = mousePos;
-            //}
-            //else
-            //{
-            //    Cv2.Circle(_LabelImage, (int)mousePos.X, (int)mousePos.Y, _BrushWidth / 2, _Curcolor, -1, LineTypes.Link4);
+            else
+            {
+                // Cv2.Circle(_LabelImage, (int)mousePos.X, (int)mousePos.Y, _BrushWidth / 2, _Curcolor, -1, LineTypes.Link4);
 
-            //    _RoiRect.X = (int)mousePos.X - _BrushWidth / 2;
-            //    _RoiRect.Y = (int)mousePos.Y - _BrushWidth / 2;
-            //    _RoiRect.Width = _BrushWidth + 1;
-            //    _RoiRect.Height = _BrushWidth + 1;
-            //    UpdateLabelLayer();
+                _RoiRect.X = (int)mousePos.X - _BrushWidth / 2;
+                _RoiRect.Y = (int)mousePos.Y - _BrushWidth / 2;
+                _RoiRect.Width = _BrushWidth + 1;
+                _RoiRect.Height = _BrushWidth + 1;
+                UpdateLabelImage();
 
-            //    _DrawlastDragPoint = mousePos;
-            //}
-        }
-
-        private void UpdateWriteableBitmapRoi(System.Windows.Point pos)
-        {
-            _RoiRect.X = (int)pos.X - _BrushWidth / 2;
-            _RoiRect.Y = (int)pos.Y - _BrushWidth / 2;
-            _RoiRect.Width = _BrushWidth + 1;
-            _RoiRect.Height = _BrushWidth + 1;
-        }
-
-        private void UpdateWriteableBitmapRoi(int posX, int posY)
-        {
-            int startX = Math.Min(_DrawingStartPos.X, posX);
-            int startY = Math.Min(_DrawingStartPos.Y, posY);
-
-            _RoiRect.X = startX - _BrushWidth / 2;
-            _RoiRect.Y = startY - _BrushWidth / 2;
-            _RoiRect.Width = Math.Abs(_DrawingStartPos.X - posX) + _BrushWidth + 1;
-            _RoiRect.Height = Math.Abs(_DrawingStartPos.Y - posY) + _BrushWidth + 1;
+                _DrawlastDragPoint = mousePos;
+            }
         }
 
         private void PART_Image_MouseMove(object sender, MouseEventArgs e)
@@ -355,88 +355,123 @@ namespace ImageLabelingControl_OpenCV
                 var mousePos = e.GetPosition(PART_Grid);
                 if (_CurDrawType == DrawType.Line)
                 {
-                    DrawLine(mousePos);
+                    // _DrawLabel.OnMouseMove(PART_Grid, PART_TemplabelImage, _DrawWriteableBitmapSource, _RoiRect, e);
+
+                    //if (_DrawStartPoint.HasValue)
+                    //{
+                    //    int preX = (int)_DrawStartPoint.Value.X;
+                    //    int preY = (int)_DrawStartPoint.Value.Y;
+                    //    int curX = (int)mousePos.X;
+                    //    int curY = (int)mousePos.Y;
+
+                    //    if (_DrawPrevPoint.HasValue)
+                    //    {
+                    //        Cv2.Line(_TempLabelImage, preX, preY, (int)_DrawPrevPoint.Value.X, (int)_DrawPrevPoint.Value.Y, _EraserColor, _BrushWidth, LineTypes.Link8);
+                    //        Cv2.Line(_TempLabelImage, preX, preY, curX, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
+
+                    //        _DrawWriteableBitmapSource.WritePixels(_RoiRect, _TempLabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
+
+                    //        int startX = Math.Min(preX, curX);
+                    //        int startY = Math.Min(preY, curY);
+                    //        _RoiRect.X = startX - _BrushWidth / 2;
+                    //        _RoiRect.Y = startY - _BrushWidth / 2;
+                    //        _RoiRect.Width = Math.Abs((curX - preX)) + _BrushWidth + 1;
+                    //        _RoiRect.Height = Math.Abs((curY - preY)) + _BrushWidth + 1;
+                    //    }
+                    //    else
+                    //    {
+                    //        Cv2.Line(_TempLabelImage, preX, preY, curX, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
+
+                    //        int startX = Math.Min(preX, curX);
+                    //        int startY = Math.Min(preY, curY);
+                    //        _RoiRect.X = startX - _BrushWidth / 2;
+                    //        _RoiRect.Y = startY - _BrushWidth / 2;
+                    //        _RoiRect.Width = Math.Abs((curX - preX)) + _BrushWidth + 1;
+                    //        _RoiRect.Height = Math.Abs((curY - preY)) + _BrushWidth + 1;
+                    //        _DrawWriteableBitmapSource.WritePixels(_RoiRect, _TempLabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
+
+                    //    }
+                    //    _DrawPrevPoint = mousePos;
+                    //    PART_TemplabelImage.Source = _DrawWriteableBitmapSource;
+                    //}
+
+                    //if (_DrawStartPoint.HasValue)
+                    //{
+                    //    int preX = (int)_DrawStartPoint.Value.X;
+                    //    int preY = (int)_DrawStartPoint.Value.Y;
+                    //    int curX = (int)mousePos.X;
+                    //    int curY = (int)mousePos.Y;
+                    //}
                 }
                 else
                 {
-                    DrawBrush(mousePos);
+                    if (_DrawlastDragPoint.HasValue)
+                    {
+                        int preX = (int)_DrawlastDragPoint.Value.X;
+                        int preY = (int)_DrawlastDragPoint.Value.Y;
+                        int curX = (int)mousePos.X;
+                        int curY = (int)mousePos.Y;
+
+
+
+
+
+
+                        // _WriteableBitmapSource.DrawLine(preX, preY, curX, curY, Colors.Red);
+                        WriteableBitmapExtensions.DrawLine(_WriteableBitmapSource.GetBitmapContext(), (int)_WriteableBitmapSource.Width, (int)_WriteableBitmapSource.Height, preX, preY, curX, curY,150);
+
+                       
+
+                        //Cv2.Line(_LabelImage, (int)_DrawlastDragPoint.Value.X, (int)_DrawlastDragPoint.Value.Y,
+                        //    (int)mousePos.X, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
+                        int startX = Math.Min(preX, curX);
+                        int startY = Math.Min(preY, curY);
+                        _RoiRect.X = startX - _BrushWidth / 2;
+                        _RoiRect.Y = startY - _BrushWidth / 2;
+                        _RoiRect.Width = Math.Abs((curX - preX)) + _BrushWidth + 1;
+                        _RoiRect.Height = Math.Abs((curY - preY)) + _BrushWidth + 1;
+
+                        // UpdateLabelImage();
+                        _DrawlastDragPoint = mousePos;
+                    }
                 }
             }
-        }
-
-        private void DrawBrush(System.Windows.Point pos)
-        {
-            int curX = (int)pos.X;
-            int curY = (int)pos.Y;
-
-            Cv2.Line(_LabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
-            UpdateWriteableBitmapRoi(curX, curY);
-            UpdateLabelLayer();
-
-            _DrawingStartPos.Set(pos);
-        }
-
-        private bool _IsFirstDraw = true;
-        private void DrawLine(System.Windows.Point pos)
-        {
-            int curX = (int)pos.X;
-            int curY = (int)pos.Y;
-
-            if (!_IsFirstDraw)
-            {
-                Cv2.Line(_TempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, 
-                    _DrawingLastPos.X, _DrawingLastPos.Y, _EraserColor, _BrushWidth, LineTypes.Link8);
-
-                Cv2.Line(_TempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
-                _DrawWriteableBitmapSource.WritePixels(_RoiRect, _TempLabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
-                UpdateWriteableBitmapRoi(curX, curY);
-            }
-            else
-            {
-                Cv2.Line(_TempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
-
-                UpdateWriteableBitmapRoi(curX, curY);
-                _DrawWriteableBitmapSource.WritePixels(_RoiRect, _TempLabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
-            }
-
-            _DrawingLastPos.Set(pos);
-            PART_TemplabelImage.Source = _DrawWriteableBitmapSource;
-            _IsFirstDraw = false;
         }
 
         private void PART_Grid_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (_CurDrawType == DrawType.Line)
             {
-                _IsFirstDraw = true;
-                Cv2.Line(_LabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                    _DrawingLastPos.X, _DrawingLastPos.Y, _Curcolor, _BrushWidth, LineTypes.Link8);
-                UpdateLabelLayer();
+                // _DrawLabel.OnMouseUp(PART_LabelImage, _LabelImage, _WriteableBitmapSource, _RoiRect, e);
+                //int preX = (int)_DrawStartPoint.Value.X;
+                //int preY = (int)_DrawStartPoint.Value.Y;
+                //int curX = (int)_DrawPrevPoint.Value.X;
+                //int curY = (int)_DrawPrevPoint.Value.Y;
+
+                //Cv2.Line(_LabelImage, preX, preY, curX, curY, _Curcolor, _BrushWidth, LineTypes.Link8);
+                //UpdateLabelImage();
             }
 
-            _TempLabelImage = new Mat(new OpenCvSharp.Size(_ImageInfo.Width, _ImageInfo.Height), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
-            _DrawWriteableBitmapSource.WritePixels(_RoiRect, _TempLabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
+            //_TempLabelImage = new Mat(new OpenCvSharp.Size(_ImageInfo.Width, _ImageInfo.Height), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
+            //_DrawWriteableBitmapSource.WritePixels(_RoiRect, _TempLabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
             PART_TemplabelImage.Source = _DrawWriteableBitmapSource;
 
             _DrawStartPoint = null;
             _DrawPrevPoint = null;
-
-            UpdateLabelLayer();
         }
 
-        private void UpdateLabelLayer()
+        private void UpdateLabelImage()
         {
-            _WriteableBitmapSource.WritePixels(_RoiRect, _LabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
+            // _WriteableBitmapSource.WritePixels(_RoiRect, _LabelImage.Data, _ImageSize, _ImageStride, _RoiRect.X, _RoiRect.Y);
             PART_LabelImage.Source = _WriteableBitmapSource;
         }
+    }
 
-        #region Method
-
-        #region Draw Action
-
-        #endregion
-        
-        #endregion
+    public enum DrawType
+    {
+        Cursor,
+        Eraser,
+        Line
     }
 
     public static class PointExtensionMethod
@@ -445,36 +480,6 @@ namespace ImageLabelingControl_OpenCV
         {
             point.X = (int)point.X;
             point.Y = (int)point.Y;
-        }
-    }
-
-    public struct IntPoint
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-
-        public IntPoint(System.Windows.Point point)
-        {
-            X = (int)point.X;
-            Y = (int)point.Y;
-        }
-
-        public IntPoint(double x, double y)
-        {
-            X = (int)x;
-            Y = (int)y;
-        }
-
-        public void Set(System.Windows.Point point)
-        {
-            X = (int)point.X;
-            Y = (int)point.Y;
-        }
-
-        public void Set(double x, double y)
-        {
-            X = (int)x;
-            Y = (int)y;
         }
     }
 }
