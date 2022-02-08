@@ -7,7 +7,7 @@ using OpenCvSharp;
 
 namespace ImageLabelingControl_OpenCV.Draw
 {
-    public class DrawLine : DrawLabelBase
+    public class DrawRectangle : DrawLabelBase
     {
         private bool _IsFirstDraw;
         private IntPoint _DrawingStartPos;
@@ -35,16 +35,18 @@ namespace ImageLabelingControl_OpenCV.Draw
 
             if (!_IsFirstDraw)
             {
-                Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                    _DrawingLastPos.X, _DrawingLastPos.Y, eraserColor, thickness, LineTypes.Link8);
+                Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
+                    new OpenCvSharp.Point(_DrawingLastPos.X, _DrawingLastPos.Y), eraserColor, -1, LineTypes.Link8);
 
-                Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, color, thickness, LineTypes.Link8);
+                Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
+                    new OpenCvSharp.Point(curX, curY), color, -1, LineTypes.Link8);
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
                 UpdateWriteableBitmapRoi(ref roiRect, curX, curY);
             }
             else
             {
-                Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, color, thickness, LineTypes.Link8);
+                Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
+                    new OpenCvSharp.Point(curX, curY), color, -1, LineTypes.Link8);
 
                 UpdateWriteableBitmapRoi(ref roiRect, curX, curY);
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
@@ -69,12 +71,12 @@ namespace ImageLabelingControl_OpenCV.Draw
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect)
         {
             _IsFirstDraw = true;
-            Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                _DrawingLastPos.X, _DrawingLastPos.Y, eraserColor, thickness, LineTypes.Link8);
+            Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
+                new OpenCvSharp.Point(_DrawingLastPos.X, _DrawingLastPos.Y), eraserColor, -1, LineTypes.Link8);
             TempWriteableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
 
-            Cv2.Line(labelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                _DrawingLastPos.X, _DrawingLastPos.Y, color, thickness, LineTypes.Link8);
+            Cv2.Rectangle(labelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
+                new OpenCvSharp.Point(_DrawingLastPos.X, _DrawingLastPos.Y), color, -1, LineTypes.Link8);
             writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
             tempLabelImage.Dispose();
         }

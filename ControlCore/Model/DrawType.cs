@@ -10,6 +10,7 @@ namespace ControlCore.Model
     {
         Brush,
         Eraser,
-        Line
+        Line,
+        Rect
     }
 }

@@ -1,9 +1,4 @@
 ﻿using OpenCvSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,8 +8,21 @@ namespace ImageLabelingControl_OpenCV.Draw
 {
     public abstract class DrawLabelBase
     {
-        public abstract void OnMouseDown(Grid grid, Scalar color, int imageSize, int imageStride, int widthScale, MouseButtonEventArgs e);
-        public abstract void OnMouseMove(Grid grid, Image image, WriteableBitmap writeableBitmap, Int32Rect roiRect, MouseEventArgs e);
-        public abstract void OnMouseUp(Image image, Mat labelImage, WriteableBitmap writeableBitmap, Int32Rect roiRect, MouseButtonEventArgs e);
+        protected Mat tempLabelImage;
+        protected int imageWidth;
+        protected int imageHeight;
+        protected int imageSize;
+        protected int imageStride;
+        protected int thickness;
+        protected Scalar color;
+        protected readonly Scalar eraserColor = new Scalar(0x00, 0x00, 0x00, 0x00);
+
+        public abstract void OnMouseDown(System.Windows.Point mousePos, int imageWidth, 
+            int imageHeight, int imageSize, int imageStride, int thickness, Scalar color);
+
+        public abstract void OnMouseMove(System.Windows.Point mousePos, WriteableBitmap writeableBitmap, ref Int32Rect roiRect);
+
+        public abstract void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
+            WriteableBitmap TempWriteableBitmap, Int32Rect roiRect);
     }
 }

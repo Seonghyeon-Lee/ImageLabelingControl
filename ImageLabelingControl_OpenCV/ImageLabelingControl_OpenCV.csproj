@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="Draw\DrawLabelBase.cs" />
     <Compile Include="Draw\DrawLine.cs" />
+    <Compile Include="Draw\DrawRectangle.cs" />
     <Compile Include="ImageInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

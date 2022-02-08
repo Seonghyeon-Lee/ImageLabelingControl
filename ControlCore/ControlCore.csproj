@@ -47,6 +47,7 @@
     <Compile Include="Model\CustomCursors.cs" />
     <Compile Include="Model\DrawType.cs" />
     <Compile Include="Model\ImageInfo.cs" />
+    <Compile Include="Model\IntPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
