@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageLabelingControl_OpenCV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdornerTest", "AdornerTest\AdornerTest.csproj", "{A4C1C0B4-082A-4553-A680-1D1857C5E148}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WriteableBitmapEX_Test", "WriteableBitmapEX_Test\WriteableBitmapEX_Test.csproj", "{FC152445-2292-4212-A75C-0A3DD80D25E8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlCore", "ControlCore\ControlCore.csproj", "{B258A77C-4020-4796-B99C-25CE3BCB11CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoomableScrollviewer", "ZoomableScrollviewer\ZoomableScrollviewer.csproj", "{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,14 +45,6 @@ Global
 		{A4C1C0B4-082A-4553-A680-1D1857C5E148}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4C1C0B4-082A-4553-A680-1D1857C5E148}.Release|x64.ActiveCfg = Release|Any CPU
 		{A4C1C0B4-082A-4553-A680-1D1857C5E148}.Release|x64.Build.0 = Release|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Debug|x64.Build.0 = Debug|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Release|x64.ActiveCfg = Release|Any CPU
-		{FC152445-2292-4212-A75C-0A3DD80D25E8}.Release|x64.Build.0 = Release|Any CPU
 		{B258A77C-4020-4796-B99C-25CE3BCB11CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B258A77C-4020-4796-B99C-25CE3BCB11CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B258A77C-4020-4796-B99C-25CE3BCB11CD}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -61,6 +53,14 @@ Global
 		{B258A77C-4020-4796-B99C-25CE3BCB11CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B258A77C-4020-4796-B99C-25CE3BCB11CD}.Release|x64.ActiveCfg = Release|Any CPU
 		{B258A77C-4020-4796-B99C-25CE3BCB11CD}.Release|x64.Build.0 = Release|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Debug|x64.Build.0 = Debug|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Release|x64.ActiveCfg = Release|Any CPU
+		{E99D81C5-6BF4-4A39-9E12-ACCA7B13B547}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

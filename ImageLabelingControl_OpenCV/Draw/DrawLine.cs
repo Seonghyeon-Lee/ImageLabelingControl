@@ -7,7 +7,7 @@ using OpenCvSharp;
 
 namespace ImageLabelingControl_OpenCV.Draw
 {
-    public class DrawLine : DrawLabelBase
+    public class DrawLine : DrawShape
     {
         private bool _IsFirstDraw;
         private IntPoint _DrawingStartPos;
@@ -54,17 +54,6 @@ namespace ImageLabelingControl_OpenCV.Draw
             _DrawingLastPos.Set(mousePos);
         }
 
-        protected override void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2)
-        {
-            int startX = Math.Min(x1, x2);
-            int startY = Math.Min(y1, y2);
-
-            roiRect.X = startX - thickness / 2;
-            roiRect.Y = startY - thickness / 2;
-            roiRect.Width = Math.Abs(x1 - x2) + thickness + 1;
-            roiRect.Height = Math.Abs(y1 - y2) + thickness + 1;
-        }
-
         public override void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect)
         {
@@ -81,6 +70,14 @@ namespace ImageLabelingControl_OpenCV.Draw
 
             _IsFirstDraw = true;
             tempLabelImage.Dispose();
+        }
+
+        protected override void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2)
+        {
+            roiRect.X = Math.Min(x1, x2) - thickness / 2;
+            roiRect.Y = Math.Min(y1, y2) - thickness / 2;
+            roiRect.Width = Math.Abs(x1 - x2) + thickness + 1;
+            roiRect.Height = Math.Abs(y1 - y2) + thickness + 1;
         }
     }
 }

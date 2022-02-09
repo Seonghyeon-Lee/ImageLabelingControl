@@ -43,7 +43,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="Model\CustomCursors.cs" />
     <Compile Include="Model\DrawType.cs" />
     <Compile Include="Model\ImageInfo.cs" />
@@ -51,8 +50,6 @@
     <Compile Include="Model\IntRect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,13 +1,13 @@
 ﻿using OpenCvSharp;
-using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace ImageLabelingControl_OpenCV.Draw
 {
-    public abstract class DrawLabelBase
+    /// <summary>
+    /// Image에 Label 그리는걸 도와주는 Class.
+    /// </summary>
+    public abstract class DrawShape
     {
         protected Mat tempLabelImage;
         protected int imageWidth;

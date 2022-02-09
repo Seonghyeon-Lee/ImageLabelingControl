@@ -7,7 +7,7 @@ using OpenCvSharp;
 
 namespace ImageLabelingControl_OpenCV.Draw
 {
-    public class DrawRectangle : DrawLabelBase
+    public class DrawRectangle : DrawShape
     {
         private bool _IsFirstDraw;
         private IntPoint _DrawingStartPos;
@@ -56,17 +56,6 @@ namespace ImageLabelingControl_OpenCV.Draw
             _DrawingLastPos.Set(mousePos);
         }
 
-        protected override void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2)
-        {
-            int startX = Math.Min(x1, x2);
-            int startY = Math.Min(y1, y2);
-
-            roiRect.X = startX;
-            roiRect.Y = startY;
-            roiRect.Width = Math.Abs(x1 - x2) + 2;
-            roiRect.Height = Math.Abs(y1 - y2) + 2;
-        }
-
         public override void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect)
         {
@@ -83,6 +72,14 @@ namespace ImageLabelingControl_OpenCV.Draw
 
             _IsFirstDraw = true;
             tempLabelImage.Dispose();
+        }
+
+        protected override void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2)
+        {
+            roiRect.X = Math.Min(x1, x2);
+            roiRect.Y = Math.Min(y1, y2);
+            roiRect.Width = Math.Abs(x1 - x2) + 2;
+            roiRect.Height = Math.Abs(y1 - y2) + 2;
         }
     }
 }
