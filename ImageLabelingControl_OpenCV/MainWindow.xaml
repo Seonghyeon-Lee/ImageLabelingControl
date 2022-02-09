@@ -19,6 +19,7 @@
                 <Button x:Name="EraserBtn" Width="100"/>
                 <Button x:Name="LineBtn" Width="100"/>
                 <Button x:Name="RectBtn" Width="100"/>
+                <Button x:Name="EllipseBtn" Width="100"/>
                 <Slider x:Name="PenSlider" Width="100"
                         Value="10" Minimum="0" Maximum="100"/>
             </StackPanel>
@@ -126,7 +127,7 @@
 
                 <Grid x:Name="PART_Grid" Background="Transparent">
                     <!--<Image x:Name="PART_Image2"/>-->
-                    <InkCanvas x:Name="PART_InkCanvas"
+                    <InkCanvas x:Name="PART_InkCanvas" IsEnabled="False"
                                EditingMode="None">
                         <InkCanvas.Background>
                             <VisualBrush>

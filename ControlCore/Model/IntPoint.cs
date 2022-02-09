@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ControlCore.Model
+﻿namespace ControlCore.Model
 {
+    /// <summary>
+    /// 2차원 공간에서 정수 x 및 y 좌표 쌍을 나타냅니다.
+    /// </summary>
     public struct IntPoint
     {
         public int X { get; set; }

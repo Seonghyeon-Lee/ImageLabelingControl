@@ -40,13 +40,13 @@ namespace ImageLabelingControl_OpenCV.Draw
 
                 Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, color, thickness, LineTypes.Link8);
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
-                UpdateWriteableBitmapRoi(ref roiRect, curX, curY);
+                UpdateWriteableBitmapRoi(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
             }
             else
             {
                 Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY, color, thickness, LineTypes.Link8);
 
-                UpdateWriteableBitmapRoi(ref roiRect, curX, curY);
+                UpdateWriteableBitmapRoi(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
             }
 
@@ -54,28 +54,32 @@ namespace ImageLabelingControl_OpenCV.Draw
             _DrawingLastPos.Set(mousePos);
         }
 
-        private void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int posX, int posY)
+        protected override void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2)
         {
-            int startX = Math.Min(_DrawingStartPos.X, posX);
-            int startY = Math.Min(_DrawingStartPos.Y, posY);
+            int startX = Math.Min(x1, x2);
+            int startY = Math.Min(y1, y2);
 
             roiRect.X = startX - thickness / 2;
             roiRect.Y = startY - thickness / 2;
-            roiRect.Width = Math.Abs(_DrawingStartPos.X - posX) + thickness + 1;
-            roiRect.Height = Math.Abs(_DrawingStartPos.Y - posY) + thickness + 1;
+            roiRect.Width = Math.Abs(x1 - x2) + thickness + 1;
+            roiRect.Height = Math.Abs(y1 - y2) + thickness + 1;
         }
 
         public override void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect)
         {
-            _IsFirstDraw = true;
-            Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                _DrawingLastPos.X, _DrawingLastPos.Y, eraserColor, thickness, LineTypes.Link8);
-            TempWriteableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
+            if (!_IsFirstDraw)
+            {
+                Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
+                    _DrawingLastPos.X, _DrawingLastPos.Y, eraserColor, thickness, LineTypes.Link8);
+                TempWriteableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
 
-            Cv2.Line(labelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                _DrawingLastPos.X, _DrawingLastPos.Y, color, thickness, LineTypes.Link8);
-            writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
+                Cv2.Line(labelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
+                    _DrawingLastPos.X, _DrawingLastPos.Y, color, thickness, LineTypes.Link8);
+                writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
+            }
+
+            _IsFirstDraw = true;
             tempLabelImage.Dispose();
         }
     }

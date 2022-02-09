@@ -7,7 +7,7 @@ using OpenCvSharp;
 
 namespace ImageLabelingControl_OpenCV.Draw
 {
-    public class DrawRectangle : DrawLabelBase
+    public class DrawEllipse : DrawLabelBase
     {
         private bool _IsFirstDraw;
         private IntPoint _DrawingStartPos;
@@ -33,20 +33,27 @@ namespace ImageLabelingControl_OpenCV.Draw
             int curX = (int)mousePos.X;
             int curY = (int)mousePos.Y;
 
+            int centerX = (_DrawingStartPos.X + curX) / 2;
+            int centerY = (_DrawingStartPos.Y + curY) / 2;
+            int width = Math.Abs(_DrawingStartPos.X - curX);
+            int height = Math.Abs(_DrawingStartPos.Y - curY);
+
             if (!_IsFirstDraw)
             {
                 Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
                     new OpenCvSharp.Point(_DrawingLastPos.X, _DrawingLastPos.Y), eraserColor, -1, LineTypes.Link8);
 
-                Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
-                    new OpenCvSharp.Point(curX, curY), color, -1, LineTypes.Link8);
+
+                Cv2.Ellipse(tempLabelImage, new RotatedRect(new Point2f(centerX, centerY),
+                    new Size2f(width, height), 0), color, -1, LineTypes.Link8);
+
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
                 UpdateWriteableBitmapRoi(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
             }
             else
             {
-                Cv2.Rectangle(tempLabelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
-                    new OpenCvSharp.Point(curX, curY), color, -1, LineTypes.Link8);
+                Cv2.Ellipse(tempLabelImage, new RotatedRect(new Point2f(centerX, centerY),
+                    new Size2f(width, height), 0), color, -1, LineTypes.Link8);
 
                 UpdateWriteableBitmapRoi(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
@@ -76,8 +83,8 @@ namespace ImageLabelingControl_OpenCV.Draw
                     new OpenCvSharp.Point(_DrawingLastPos.X, _DrawingLastPos.Y), eraserColor, -1, LineTypes.Link8);
                 TempWriteableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
 
-                Cv2.Rectangle(labelImage, new OpenCvSharp.Point(_DrawingStartPos.X, _DrawingStartPos.Y),
-                    new OpenCvSharp.Point(_DrawingLastPos.X, _DrawingLastPos.Y), color, -1, LineTypes.Link8);
+                Cv2.Ellipse(labelImage, new RotatedRect(new OpenCvSharp.Point(roiRect.X + (roiRect.Width - 2) / 2,
+                    roiRect.Y + (roiRect.Height -2) / 2), new Size2f(roiRect.Width -2, roiRect.Height -2), 0), color, -1, LineTypes.Link8);
                 writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
             }
 

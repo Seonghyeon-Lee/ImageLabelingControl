@@ -1,4 +1,5 @@
 ﻿using OpenCvSharp;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,5 +25,7 @@ namespace ImageLabelingControl_OpenCV.Draw
 
         public abstract void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect);
+
+        protected abstract void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2);
     }
 }

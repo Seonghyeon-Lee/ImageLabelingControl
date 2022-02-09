@@ -48,6 +48,7 @@
     <Compile Include="Model\DrawType.cs" />
     <Compile Include="Model\ImageInfo.cs" />
     <Compile Include="Model\IntPoint.cs" />
+    <Compile Include="Model\IntRect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

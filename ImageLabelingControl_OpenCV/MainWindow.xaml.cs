@@ -77,11 +77,13 @@ namespace ImageLabelingControl_OpenCV
             BrushBtn.Click += BrushBtn_Click;
             LineBtn.Click += LineBtn_Click;
             RectBtn.Click += RectBtn_Click;
+            EllipseBtn.Click += EllipseBtn_Click; ;
             PenSlider.ValueChanged += PenSlider_ValueChanged;
 
             PART_Viewbox.Cursor = CustomCursors.Brush(_BrushWidth * _CurCursorScale);
             _Curcolor = _DrawColor;
         }
+
 
         private void InitImage()
         {
@@ -289,6 +291,13 @@ namespace ImageLabelingControl_OpenCV
             PART_Viewbox.Cursor = Cursors.Cross;
             _DrawLabel = new DrawRectangle();
         }
+
+        private void EllipseBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _CurDrawType = DrawType.Ellipse;
+            PART_Viewbox.Cursor = Cursors.Cross;
+            _DrawLabel = new DrawEllipse();
+        }
         #endregion
 
         #region ScrollViewer Method
@@ -453,9 +462,12 @@ namespace ImageLabelingControl_OpenCV
                     break;
                 case DrawType.Line:
                 case DrawType.Rect:
+                case DrawType.Ellipse:
                     // DrawLine(mousePos);
                     _DrawLabel.OnMouseMove(mousePos, _DrawWriteableBitmapSource, ref _RoiRect);
                     PART_TemplabelImage.Source = _DrawWriteableBitmapSource;
+
+
                     // DrawRect(mousePos);
                     break;
                 default:
@@ -468,6 +480,7 @@ namespace ImageLabelingControl_OpenCV
             if (_DrawLabel != null)
             {
                 _DrawLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect);
+                
             }
             UpdateLabelLayer();
             PART_TemplabelImage.Source = _DrawWriteableBitmapSource;
@@ -477,6 +490,4 @@ namespace ImageLabelingControl_OpenCV
 
         #endregion
     }
-
-    
 }

@@ -11,6 +11,7 @@ namespace ControlCore.Model
         Brush,
         Eraser,
         Line,
-        Rect
+        Rect,
+        Ellipse
     }
 }
