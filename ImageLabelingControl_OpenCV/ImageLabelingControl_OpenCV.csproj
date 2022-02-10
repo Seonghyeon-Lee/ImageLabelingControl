@@ -92,6 +92,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Draw\DrawEllipse.cs" />
+    <Compile Include="Draw\DrawPolygon.cs" />
     <Compile Include="Draw\DrawPolyline.cs" />
     <Compile Include="Draw\DrawShape.cs" />
     <Compile Include="Draw\DrawLine.cs" />

@@ -55,7 +55,7 @@ namespace ImageLabelingControl_OpenCV.Draw
         }
 
         public override void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
-            WriteableBitmap TempWriteableBitmap, Int32Rect roiRect)
+            WriteableBitmap TempWriteableBitmap, Int32Rect roiRect, bool isRightClick = false)
         {
             if (!_IsFirstDraw)
             {

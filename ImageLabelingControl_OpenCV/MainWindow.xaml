@@ -22,6 +22,7 @@
                 <Button x:Name="RectBtn" Content="Rect" Width="100"/>
                 <Button x:Name="EllipseBtn" Content="Ellipse" Width="100"/>
                 <Button x:Name="PolylineBtn" Content="Polyline" Width="100"/>
+                <Button x:Name="PolygonBtn" Content="Polygon" Width="100"/>
                 <Slider x:Name="PenSlider" Width="100"
                         Value="10" Minimum="0" Maximum="100"/>
             </StackPanel>

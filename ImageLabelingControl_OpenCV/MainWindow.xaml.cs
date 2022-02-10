@@ -71,12 +71,15 @@ namespace ImageLabelingControl_OpenCV
             RectBtn.Click += RectBtn_Click;
             EllipseBtn.Click += EllipseBtn_Click;
             PolylineBtn.Click += PolylineBtn_Click;
+            PolygonBtn.Click += PolygonBtn_Click;
             PenSlider.ValueChanged += PenSlider_ValueChanged;
 
             PART_Viewbox.Cursor = CustomCursors.Brush(_Thickness * _CurCursorScale);
 
             _Curcolor = _DrawColor;
         }
+
+
 
         private void InitImage()
         {
@@ -105,13 +108,6 @@ namespace ImageLabelingControl_OpenCV
 
             _DrawingLastPos.Set(mousePos);
         }
-
-        private List<List<OpenCvSharp.Point>> Points;
-        private void DrawPolygon(System.Windows.Point mousePos)
-        {
-
-        }
-
         #endregion
 
         #region Scale Method
@@ -244,6 +240,13 @@ namespace ImageLabelingControl_OpenCV
             _DrawingLabel = new DrawPolyline();
         }
 
+        private void PolygonBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _CurDrawType = DrawType.Polygon;
+            PART_Viewbox.Cursor = Cursors.Cross;
+            _DrawingLabel = new DrawPolygon();
+        }
+
         #endregion
 
         #region ScrollViewer Method
@@ -369,9 +372,6 @@ namespace ImageLabelingControl_OpenCV
         #endregion
 
         #region Grid
-        private bool _IsStartPoly = false;
-        private bool _HasPolyShape = false;
-
         private void PART_Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (_LabelImage == null)
@@ -385,17 +385,6 @@ namespace ImageLabelingControl_OpenCV
                 UpdateWriteableBitmapRoi(_DrawingLastPos.X, _DrawingLastPos.Y);
                 UpdateLabelLayer();
             }
-            //else if(_CurDrawType == DrawType.Polyline)
-            //{
-            //    if (_IsStartPoly)
-            //    {
-            //        _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect);
-            //        UpdateLabelLayer();
-            //        _DrawingLabel = new DrawLine();
-            //    }
-            //    _DrawingLabel.OnMouseDown(mousePos, _LabelImage.Width, _LabelImage.Height, _ImageSize, _ImageStride, _Thickness, _Curcolor);
-            //    _IsStartPoly = true;
-            //}
             else
             {
                 if (_CurDrawType == DrawType.Polyline)
@@ -410,7 +399,7 @@ namespace ImageLabelingControl_OpenCV
         private void PART_Grid_MouseMove(object sender, MouseEventArgs e)
         {
             var mousePos = e.GetPosition(PART_Grid);
-            if (_CurDrawType == DrawType.Polyline)
+            if (_CurDrawType == DrawType.Polyline || _CurDrawType == DrawType.Polygon)
             {
                 _DrawingLabel.OnMouseMove(mousePos, _DrawWriteableBitmapSource, ref _RoiRect);
                 PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
@@ -443,13 +432,12 @@ namespace ImageLabelingControl_OpenCV
 
         private void PART_Grid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_CurDrawType == DrawType.Polyline)
+            if (_CurDrawType == DrawType.Polyline || _CurDrawType == DrawType.Polygon)
             {
-                _DrawingLabel.OnMouseUp(null, null, _DrawWriteableBitmapSource, _RoiRect);
+                _DrawingLabel.OnMouseUp(null, null, _DrawWriteableBitmapSource, _RoiRect, true);
                 UpdateLabelLayer();
                 PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
             }
-            //_IsStartPoly = false;
         }
          
         #endregion
