@@ -16,11 +16,12 @@
 
         <Grid>
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="BrushBtn" Width="100"/>
-                <Button x:Name="EraserBtn" Width="100"/>
-                <Button x:Name="LineBtn" Width="100"/>
-                <Button x:Name="RectBtn" Width="100"/>
-                <Button x:Name="EllipseBtn" Width="100"/>
+                <Button x:Name="BrushBtn" Content="Brush" Width="100"/>
+                <Button x:Name="EraserBtn" Content="Eraser" Width="100"/>
+                <Button x:Name="LineBtn" Content="Line" Width="100"/>
+                <Button x:Name="RectBtn" Content="Rect" Width="100"/>
+                <Button x:Name="EllipseBtn" Content="Ellipse" Width="100"/>
+                <Button x:Name="PolylineBtn" Content="Polyline" Width="100"/>
                 <Slider x:Name="PenSlider" Width="100"
                         Value="10" Minimum="0" Maximum="100"/>
             </StackPanel>
@@ -148,10 +149,6 @@
                     </Grid>
                 </Viewbox>
             </Grid>
-            
-            
         </ScrollViewer>
-        
-        <Grid Grid.Row="1" Width="5" Height="5" Background="Blue" VerticalAlignment="Center" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

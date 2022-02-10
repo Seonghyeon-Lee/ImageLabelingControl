@@ -48,14 +48,14 @@ namespace ImageLabelingControl_OpenCV.Draw
                     new Size2f(width, height), 0), color, -1, LineTypes.Link8);
 
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
-                UpdateWriteableBitmapRoi(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
+                UpdateRoiForRect(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
             }
             else
             {
                 Cv2.Ellipse(tempLabelImage, new RotatedRect(new Point2f(centerX, centerY),
                     new Size2f(width, height), 0), color, -1, LineTypes.Link8);
 
-                UpdateWriteableBitmapRoi(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
+                UpdateRoiForRect(ref roiRect, _DrawingStartPos.X, _DrawingStartPos.Y, curX, curY);
                 writeableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
             }
 
@@ -77,16 +77,7 @@ namespace ImageLabelingControl_OpenCV.Draw
                 writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
             }
 
-            _IsFirstDraw = true;
             tempLabelImage.Dispose();
-        }
-
-        protected override void UpdateWriteableBitmapRoi(ref Int32Rect roiRect, int x1, int y1, int x2, int y2)
-        {
-            roiRect.X = Math.Min(x1, x2);
-            roiRect.Y = Math.Min(y1, y2);
-            roiRect.Width = Math.Abs(x1 - x2) + 2;
-            roiRect.Height = Math.Abs(y1 - y2) + 2;
         }
     }
 }

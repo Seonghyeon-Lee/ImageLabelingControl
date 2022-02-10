@@ -2,6 +2,7 @@
 using ImageLabelingControl_OpenCV.Draw;
 using OpenCvSharp;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -62,12 +63,14 @@ namespace ImageLabelingControl_OpenCV
             PART_Grid.PreviewMouseLeftButtonDown += PART_Grid_PreviewMouseLeftButtonDown;
             PART_Grid.MouseMove += PART_Grid_MouseMove;
             PART_Grid.PreviewMouseLeftButtonUp += PART_Grid_PreviewMouseLeftButtonUp;
+            PART_Grid.PreviewMouseRightButtonDown += PART_Grid_PreviewMouseRightButtonDown;
 
             EraserBtn.Click += EraserBtn_Click;
             BrushBtn.Click += BrushBtn_Click;
             LineBtn.Click += LineBtn_Click;
             RectBtn.Click += RectBtn_Click;
-            EllipseBtn.Click += EllipseBtn_Click; ;
+            EllipseBtn.Click += EllipseBtn_Click;
+            PolylineBtn.Click += PolylineBtn_Click;
             PenSlider.ValueChanged += PenSlider_ValueChanged;
 
             PART_Viewbox.Cursor = CustomCursors.Brush(_Thickness * _CurCursorScale);
@@ -90,7 +93,7 @@ namespace ImageLabelingControl_OpenCV
 
         #region Method
 
-        #region Draw Action
+        #region Drawing Method
         private void DrawBrush(System.Windows.Point mousePos)
         {
             int curX = (int)mousePos.X;
@@ -101,6 +104,12 @@ namespace ImageLabelingControl_OpenCV
             UpdateLabelLayer();
 
             _DrawingLastPos.Set(mousePos);
+        }
+
+        private List<List<OpenCvSharp.Point>> Points;
+        private void DrawPolygon(System.Windows.Point mousePos)
+        {
+
         }
 
         #endregion
@@ -226,6 +235,15 @@ namespace ImageLabelingControl_OpenCV
             PART_Viewbox.Cursor = Cursors.Cross;
             _DrawingLabel = new DrawEllipse();
         }
+
+
+        private void PolylineBtn_Click(object sender, RoutedEventArgs e)
+        {
+            _CurDrawType = DrawType.Polyline;
+            PART_Viewbox.Cursor = Cursors.Cross;
+            _DrawingLabel = new DrawPolyline();
+        }
+
         #endregion
 
         #region ScrollViewer Method
@@ -351,6 +369,8 @@ namespace ImageLabelingControl_OpenCV
         #endregion
 
         #region Grid
+        private bool _IsStartPoly = false;
+        private bool _HasPolyShape = false;
 
         private void PART_Grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -365,18 +385,41 @@ namespace ImageLabelingControl_OpenCV
                 UpdateWriteableBitmapRoi(_DrawingLastPos.X, _DrawingLastPos.Y);
                 UpdateLabelLayer();
             }
+            //else if(_CurDrawType == DrawType.Polyline)
+            //{
+            //    if (_IsStartPoly)
+            //    {
+            //        _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect);
+            //        UpdateLabelLayer();
+            //        _DrawingLabel = new DrawLine();
+            //    }
+            //    _DrawingLabel.OnMouseDown(mousePos, _LabelImage.Width, _LabelImage.Height, _ImageSize, _ImageStride, _Thickness, _Curcolor);
+            //    _IsStartPoly = true;
+            //}
             else
             {
+                if (_CurDrawType == DrawType.Polyline)
+                {
+                    _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect);
+                    UpdateLabelLayer();
+                }
                 _DrawingLabel.OnMouseDown(mousePos, _LabelImage.Width, _LabelImage.Height, _ImageSize, _ImageStride, _Thickness, _Curcolor);
             }
         }
 
         private void PART_Grid_MouseMove(object sender, MouseEventArgs e)
         {
+            var mousePos = e.GetPosition(PART_Grid);
+            if (_CurDrawType == DrawType.Polyline)
+            {
+                _DrawingLabel.OnMouseMove(mousePos, _DrawWriteableBitmapSource, ref _RoiRect);
+                PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
+                return;
+            }
+
             if (e.LeftButton != MouseButtonState.Pressed)
                 return;
 
-            var mousePos = e.GetPosition(PART_Grid);
             if (_DrawingLabel == null)
             {
                 DrawBrush(mousePos);
@@ -390,7 +433,7 @@ namespace ImageLabelingControl_OpenCV
 
         private void PART_Grid_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (_DrawingLabel == null)
+            if (_DrawingLabel == null || _CurDrawType == DrawType.Polyline)
                 return;
 
             _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect);
@@ -398,6 +441,17 @@ namespace ImageLabelingControl_OpenCV
             PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
         }
 
+        private void PART_Grid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_CurDrawType == DrawType.Polyline)
+            {
+                _DrawingLabel.OnMouseUp(null, null, _DrawWriteableBitmapSource, _RoiRect);
+                UpdateLabelLayer();
+                PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
+            }
+            //_IsStartPoly = false;
+        }
+         
         #endregion
 
         #endregion

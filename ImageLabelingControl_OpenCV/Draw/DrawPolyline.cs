@@ -1,15 +1,15 @@
-﻿using System;
+﻿using ControlCore.Model;
+using OpenCvSharp;
+
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-using ControlCore.Model;
-using OpenCvSharp;
-
 namespace ImageLabelingControl_OpenCV.Draw
 {
-    public class DrawLine : DrawShape
+    public class DrawPolyline : DrawShape
     {
         private bool _IsFirstDraw;
+        private bool _IsStartPoly;
         private IntPoint _DrawingStartPos;
         private IntPoint _DrawingLastPos;
 
@@ -24,12 +24,16 @@ namespace ImageLabelingControl_OpenCV.Draw
             this.color = color;
 
             _IsFirstDraw = true;
+            _IsStartPoly = true;
             _DrawingStartPos.Set(mousePos);
             tempLabelImage = new Mat(new OpenCvSharp.Size(imageWidth, imageHeight), MatType.CV_8UC4, new Scalar(0, 0, 0, 0));
         }
 
         public override void OnMouseMove(System.Windows.Point mousePos, WriteableBitmap writeableBitmap, ref Int32Rect roiRect)
         {
+            if (!_IsStartPoly)
+                return;
+
             int curX = (int)mousePos.X;
             int curY = (int)mousePos.Y;
 
@@ -57,18 +61,29 @@ namespace ImageLabelingControl_OpenCV.Draw
         public override void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect)
         {
-            if (!_IsFirstDraw)
+            if (tempLabelImage == null)
+                return;
+
+            if (labelImage != null)
+            {
+                if (!_IsFirstDraw)
+                {
+                    Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
+                        _DrawingLastPos.X, _DrawingLastPos.Y, eraserColor, thickness, LineTypes.Link8);
+                    TempWriteableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
+
+                    Cv2.Line(labelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
+                        _DrawingLastPos.X, _DrawingLastPos.Y, color, thickness, LineTypes.Link8);
+                    writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
+                }
+            }
+            else
             {
                 Cv2.Line(tempLabelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
                     _DrawingLastPos.X, _DrawingLastPos.Y, eraserColor, thickness, LineTypes.Link8);
                 TempWriteableBitmap.WritePixels(roiRect, tempLabelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
-
-                Cv2.Line(labelImage, _DrawingStartPos.X, _DrawingStartPos.Y,
-                    _DrawingLastPos.X, _DrawingLastPos.Y, color, thickness, LineTypes.Link8);
-                writeableBitmap.WritePixels(roiRect, labelImage.Data, imageSize, imageStride, roiRect.X, roiRect.Y);
+                _IsStartPoly = false;
             }
-
-            tempLabelImage.Dispose();
         }
     }
 }

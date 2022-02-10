@@ -12,6 +12,8 @@ namespace ControlCore.Model
         Eraser,
         Line,
         Rect,
-        Ellipse
+        Ellipse,
+        Polygon,
+        Polyline
     }
 }

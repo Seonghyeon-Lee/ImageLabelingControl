@@ -92,10 +92,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Draw\DrawEllipse.cs" />
+    <Compile Include="Draw\DrawPolyline.cs" />
     <Compile Include="Draw\DrawShape.cs" />
     <Compile Include="Draw\DrawLine.cs" />
     <Compile Include="Draw\DrawRectangle.cs" />
-    <Compile Include="Helper\AdvancedZooming.cs" />
+    <Compile Include="Behavior\AdvancedZooming.cs" />
     <Compile Include="ImageInfo.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
