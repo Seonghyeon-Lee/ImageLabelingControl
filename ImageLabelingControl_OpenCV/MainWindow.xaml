@@ -116,7 +116,7 @@
                 </ControlTemplate>
             </ScrollViewer.Template>
 
-            <Grid>
+            <Grid Background="Gray">
                 <Viewbox x:Name="PART_Viewbox" Margin="0"
                          SnapsToDevicePixels="True"
                          RenderTransformOrigin="0.5,0.5"       

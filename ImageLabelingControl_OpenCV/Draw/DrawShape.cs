@@ -57,6 +57,14 @@ namespace ImageLabelingControl_OpenCV.Draw
         public abstract void OnMouseUp(Mat labelImage, WriteableBitmap writeableBitmap, 
             WriteableBitmap TempWriteableBitmap, Int32Rect roiRect, bool isRightClick = false);
 
+        public delegate void OnDrawPolygonEventHandler();
+        public event OnDrawPolygonEventHandler OnDrawPolygon;
+
+        protected virtual void OnDrawPolygonEvent()
+        {
+            OnDrawPolygon?.Invoke();
+        }
+
         /// <summary>
         /// 사각형 내부에 들어오는 도형에 대한 Roi 업데이트 함수
         /// </summary>

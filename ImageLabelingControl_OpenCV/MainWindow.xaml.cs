@@ -245,6 +245,14 @@ namespace ImageLabelingControl_OpenCV
             _CurDrawType = DrawType.Polygon;
             PART_Viewbox.Cursor = Cursors.Cross;
             _DrawingLabel = new DrawPolygon();
+            _DrawingLabel.OnDrawPolygon += _DrawingLabel_OnDrawPolygon;
+        }
+
+        private void _DrawingLabel_OnDrawPolygon()
+        {
+            _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect, true);
+            UpdateLabelLayer();
+            PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
         }
 
         #endregion
@@ -387,7 +395,7 @@ namespace ImageLabelingControl_OpenCV
             }
             else
             {
-                if (_CurDrawType == DrawType.Polyline)
+                if (_CurDrawType == DrawType.Polyline || _CurDrawType == DrawType.Polygon)
                 {
                     _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect);
                     UpdateLabelLayer();
@@ -434,7 +442,7 @@ namespace ImageLabelingControl_OpenCV
         {
             if (_CurDrawType == DrawType.Polyline || _CurDrawType == DrawType.Polygon)
             {
-                _DrawingLabel.OnMouseUp(null, null, _DrawWriteableBitmapSource, _RoiRect, true);
+                _DrawingLabel.OnMouseUp(_LabelImage, _WriteableBitmapSource, _DrawWriteableBitmapSource, _RoiRect, true);
                 UpdateLabelLayer();
                 PART_TemplabelImageLayer.Source = _DrawWriteableBitmapSource;
             }
